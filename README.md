@@ -2,8 +2,11 @@
 ETL service for SSD reports
 
 ## Dependencies
-**PyMongo:**
-```pip install pymongo```
-**MySQLdb:**
-```pip install MySQL-python```
-asfd
+
+* PyMongo
+* MySQLdb
+* pytz
+
+```pip install pymongo
+pip install MySQL-python
+pip install pytz```

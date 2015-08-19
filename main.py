@@ -12,15 +12,15 @@ def main():
     logger.debug('start main')
     conf = ConfigParser.ConfigParser()
     conf.read('config.ini')
-    ssd.connectMongo(conf)
-    # db = ssd.connectMySQL(conf)
-    # data = ssd.fetchYT(
-    #         db,
-    #         datetime.datetime(2015, 7, 18),
-    #         datetime.datetime(2015, 7, 19)
-    #         )
-    # for row in range(0, 9):
-    #     print data[row]
+    # ssd.connectMongo(conf)
+    db = ssd.connectMySQL(conf)
+    data = ssd.fetchYT(
+            db,
+            datetime.datetime(2015, 7, 18),
+            datetime.datetime(2015, 7, 19)
+            )
+    for row in range(0, 9):
+        print data[row]
 
 if __name__ == '__main__':
     main()
