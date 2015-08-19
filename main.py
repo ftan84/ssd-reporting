@@ -1,4 +1,4 @@
-import ssdutilities.ssdutilities as ssd
+import ssdetl.ssdetl as ssd
 import datetime
 import ConfigParser
 import logging

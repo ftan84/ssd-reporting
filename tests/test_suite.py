@@ -1,5 +1,5 @@
 import pytest
-import ssdutilities.ssdutilities
+import ssdetl.ssdetl
 import datetime
 import ConfigParser
 
@@ -9,14 +9,14 @@ conf.read('./config.cfg')
 
 
 def test_dbconnect():
-    ssdutilities.ssdutilities.connectMySQL(conf)
-    ssdutilities.ssdutilities.connectMongo()
+    ssdetl.ssdetl.connectMySQL(conf)
+    ssdetl.ssdetl.connectMongo()
 
 
 @pytest.skip
 def test_db():
-    db = ssdutilities.ssdutilities.connectMySQL(conf)
-    data = ssdutilities.ssdutilities.fetchYT(
+    db = ssdetl.ssdetl.connectMySQL(conf)
+    data = ssdetl.ssdetl.fetchYT(
             db,
             datetime.datetime(2015, 7, 18),
             datetime.datetime(2015, 7, 19)
@@ -27,8 +27,8 @@ def test_db():
 
 
 def test_get_start_end_date():
-    startdate = ssdutilities.ssdutilities.lastStartDate()
-    enddate = ssdutilities.ssdutilities.lastEndDate()
+    startdate = ssdetl.ssdetl.lastStartDate()
+    enddate = ssdetl.ssdetl.lastEndDate()
     assert enddate.weekday() == 4
     assert startdate.weekday() == 5
     assert startdate < enddate
