@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 def main():
     logger.debug('start main')
     conf = ConfigParser.ConfigParser()
-    conf.read('config.cfg')
+    conf.read('config.ini')
     ssd.connectMongo(conf)
     # db = ssd.connectMySQL(conf)
     # data = ssd.fetchYT(
