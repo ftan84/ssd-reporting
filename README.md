@@ -7,6 +7,8 @@ ETL service for SSD reports
 * MySQLdb
 * pytz
 
-```pip install pymongo
+```
+pip install pymongo
 pip install MySQL-python
-pip install pytz```
+pip install pytz
+```
