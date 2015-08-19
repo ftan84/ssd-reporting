@@ -1,48 +1,26 @@
-import MySQLdb
-import ConfigParser
+import ssdutilities.ssdutilities as ssd
 import datetime
+import ConfigParser
+import logging
+from logging.config import fileConfig
 
-def fetchdb():
-    # Load the configuration file
-    conf = ConfigParser.ConfigParser()
-    conf.read('./config.cfg')
-    dbhost = conf.get('Database', 'host')
-    dbport = conf.getint('Database', 'port')
-    dbuser = conf.get('Database', 'user')
-    dbpw = conf.get('Database', 'pw')
-
-    con = MySQLdb.connect(dbhost, port=dbport, user=dbuser,
-                          passwd=dbpw, db='analytics')
-
-    db = con.cursor()
-    # SELECT A.day, C.id, C.name, A.views
-    # FROM yt_views A
-    # JOIN analytics_videos_bl_groups B ON A.analytics_video_id=B.analytics_video_id
-    # JOIN bl_groups C ON B.group_id=C.id
-    # WHERE A.day >= '2015-07-18'
-    # AND A.day <= '2015-07-24'
-    # GROUP BY A.day, C.id
-    # ORDER BY A.day, C.name
-    # limit 100
-    query = '''
-        SELECT A.day, C.id, C.name, A.views
-        FROM yt_views A
-        JOIN analytics_videos_bl_groups B ON A.analytics_video_id=B.analytics_video_id
-        JOIN bl_groups C ON B.group_id=C.id
-        WHERE A.day >= %s
-        AND A.day <= %s
-        GROUP BY A.day, C.id
-        ORDER BY A.day, C.name
-        limit 100
-        '''
-    db.execute(query, (datetime.datetime(2015, 6, 11), datetime.datetime(2015, 6, 13)))
-    data = db.fetchall()
-    for row in data:
-        print row
-    db.close()
+# logging.basicConfig(level=logging.DEBUG)
+fileConfig('logging.ini')
+logger = logging.getLogger(__name__)
 
 def main():
-    fetchdb()
+    logger.debug('start main')
+    conf = ConfigParser.ConfigParser()
+    conf.read('config.cfg')
+    ssd.connectMongo(conf)
+    # db = ssd.connectMySQL(conf)
+    # data = ssd.fetchYT(
+    #         db,
+    #         datetime.datetime(2015, 7, 18),
+    #         datetime.datetime(2015, 7, 19)
+    #         )
+    # for row in range(0, 9):
+    #     print data[row]
 
 if __name__ == '__main__':
     main()
