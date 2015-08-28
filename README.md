@@ -1,5 +1,5 @@
 # ssd-reporting-etl
-ETL service for SSD reports
+BI connector for reporting
 
 ## Dependencies
 

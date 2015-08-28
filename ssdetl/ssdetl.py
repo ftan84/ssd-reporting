@@ -18,10 +18,11 @@ def lastStartDate():
 
 
 def connectMySQL(conf):
-    dbhost = conf.get('MySQL', 'host')
-    dbport = conf.getint('MySQL', 'port')
-    dbuser = conf.get('MySQL', 'user')
-    dbpw = conf.get('MySQL', 'pw')
+    section = 'MySQL'
+    dbhost = conf.get(section, 'host')
+    dbport = conf.getint(section, 'port')
+    dbuser = conf.get(section, 'user')
+    dbpw = conf.get(section, 'pw')
 
     con = MySQLdb.connect(dbhost, port=dbport, user=dbuser,
                           passwd=dbpw, db='analytics')
@@ -52,11 +53,12 @@ def fetchYT(db, start_date=datetime.datetime(2015, 1, 1),
 
 
 def connectMongo(conf):
+    section = 'Mongodb'
     logger.info('Starting connectMongo')
-    mdbhost = conf.get('Mongodb', 'host')
-    mdbport = conf.getint('Mongodb', 'port')
-    mdbuser = conf.get('Mongodb', 'user')
-    mdbpw = conf.get('Mongodb', 'pw')
+    mdbhost = conf.get(section, 'host')
+    mdbport = conf.getint(section, 'port')
+    mdbuser = conf.get(section, 'user')
+    mdbpw = conf.get(section, 'pw')
     client = pymongo.MongoClient(mdbhost, mdbport)
     client['ssdreporting'].authenticate(mdbuser, mdbpw)
     db = client['ssdreporting']
@@ -64,8 +66,7 @@ def connectMongo(conf):
     return db
 
 
-# def loadMongo(db, data):
-#     db.
+def loadMongo(db, data):
     """
     days
     {
@@ -79,3 +80,4 @@ def connectMongo(conf):
         ]
     }
     """
+    print 'hello'
