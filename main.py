@@ -1,4 +1,5 @@
 import ssdetl.ssdetl as ssd
+    
 from datetime import datetime
 import ConfigParser
 import logging
@@ -10,7 +11,7 @@ fileConfig('logging.ini')
 logger = logging.getLogger(__name__)
 
 def main():
-    
+
     # Set config file and logging
     conf = ConfigParser.ConfigParser()
     conf.read('config.ini')
@@ -31,14 +32,20 @@ def main():
     #         tz.localize(datetime.datetime(2015, 7, 19))
     #         ).astimezone(pytz.utc)
 
+    
     db = ssd.connectMySQL(conf)
     data = ssd.fetchYT(
             db,
             datetime(2015, 7, 18),
+    
             datetime(2015, 7, 19)
             )
-    for row in range(0, 9):
-        print data[row]
+    # for row in range(0, 9):
+    #     print data[row]
+    logger.debug(len(data))
+    logger.debug(data[2])
+    logger.debug(data[2][0])
+
 
 if __name__ == '__main__':
     main()

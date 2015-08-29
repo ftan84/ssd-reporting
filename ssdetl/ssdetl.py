@@ -59,25 +59,29 @@ def connectMongo(conf):
     mdbport = conf.getint(section, 'port')
     mdbuser = conf.get(section, 'user')
     mdbpw = conf.get(section, 'pw')
+    mddb = conf.get(section, 'db')
     client = pymongo.MongoClient(mdbhost, mdbport)
-    client['ssdreporting'].authenticate(mdbuser, mdbpw)
-    db = client['ssdreporting']
+    client[mddb].authenticate(mdbuser, mdbpw)
+    db = client[mddb]
     logger.info('Finished connectMongo')
     return db
 
 
-def loadMongo(db, data):
+def loadYTToMongo(db, data):
+    """The function takes data taken from fetchYT and loads into Mongodb
     """
-    days
-    {
-        timestamp: ISO,
-        views: total views,
-        shows: [
-            {
-                show: Ref to show,
-                views: views
-            }, {...}
-        ]
-    }
-    """
-    print 'hello'
+    # conf = ConfigParser.ConfigParser()
+    # conf.read('../config.ini')
+    # db = connectMongo(conf)
+    for row in data:
+        date_entry = datetime.datetime.combine(
+                row[0],
+                datetime.time(0, 0, 0, 0))
+        show_entry = {
+                'show_id': row[1],
+                'show_name': row[2],
+                'youtube': {'views': row[3]}}
+        db.days.update_one(
+                {'timestamp': date_entry},
+                {'$addToSet': {'shows': show_entry}},
+                upsert=True)
