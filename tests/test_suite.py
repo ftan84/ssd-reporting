@@ -21,17 +21,17 @@ class TestSsdEtl(unittest.TestCase):
         ssdetl.ssdetl.connectMongo(conf)
 
     # @pytest.skip
-    # def test_fetchYT():
-    #     db = ssdetl.ssdetl.connectMySQL(conf)
-    #     data = ssdetl.ssdetl.fetchYT(
-    #             db,
-    #             datetime.datetime(2015, 7, 18),
-    #             datetime.datetime(2015, 7, 19)
-    #             )
-    #     testdata = [0, 30, 0, 93, 24, 1, 1, 0, 11, 2]
-    #     for row in range(0, 9):
-    #         assert data[row][3] == testdata[row]
-    #         print data[row]
+    def test_fetchYT():
+        db = ssdetl.ssdetl.connectMySQL(conf)
+        data = ssdetl.ssdetl.fetchYT(
+                db,
+                datetime.datetime(2015, 7, 18),
+                datetime.datetime(2015, 7, 19)
+                )
+        testdata = [0, 30, 0, 93, 24, 1, 1, 0, 11, 2]
+        for row in range(0, 9):
+            assert data[row][3] == testdata[row]
+            print data[row]
 
 
     def test_get_start_end_date(self):
@@ -58,8 +58,3 @@ class TestSsdEtl(unittest.TestCase):
         for row in dbmongo.days.find():
             # logger.debug('\n{}'.format(row))
             print row
-
-
-
-# if __name__ == '__main__':
-#     unittest.main()

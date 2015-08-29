@@ -35,16 +35,53 @@ def fetchYT(db, start_date=datetime.datetime(2015, 1, 1),
         ):
 
     logger.debug('Starting fetchYT')
+    # Original query
+    # query = '''
+    #     SELECT A.day, C.id, C.name, A.views
+    #     FROM yt_views A
+    #     JOIN analytics_videos_bl_groups B ON A.analytics_video_id=B.analytics_video_id
+    #     JOIN bl_groups C ON B.group_id=C.id
+    #     WHERE A.day >= %s
+    #     AND A.day <= %s
+    #     GROUP BY A.day, C.id
+    #     ORDER BY A.day, C.name
+    #     '''
     query = '''
-        SELECT A.day, C.id, C.name, A.views
-        FROM yt_views A
-        JOIN analytics_videos_bl_groups B ON A.analytics_video_id=B.analytics_video_id
-        JOIN bl_groups C ON B.group_id=C.id
-        WHERE A.day >= %s
-        AND A.day <= %s
-        GROUP BY A.day, C.id
-        ORDER BY A.day, C.name
-        '''
+        SELECT
+            ifnull(G.id, E.id) AS 'id',
+            ifnull(G.name, E.name) AS 'showname',
+            sum(A.views) AS 'views',
+            sum(A.likes) AS 'likes',
+            sum(A.dislikes) AS 'dislikes',
+            sum(A.estimatedMinutesWatched) AS 'estimatedMinutesWatched',
+            AVG(A.averageViewDuration) AS 'averageViewDuration',
+            AVG(A.averageViewPercentage) AS 'averageViewPercentage',
+            sum(A.favoritesAdded) AS 'favoritesAdded',
+            sum(A.favoritesRemoved) AS 'favoritesRemoved',
+            AVG(A.annotationCloseRate) AS 'annotationCloseRate',
+            avg(A.annotationClickThroughRate) AS 'annotationClickThroughRate',
+            sum(A.subscribersGained) AS 'subscribersGained',
+            sum(A.subscribersLost) AS 'subscribersLost',
+            sum(A.shares) AS 'shares',
+            sum(A.comments) AS 'comments'
+            FROM yt_views A
+            LEFT JOIN analytics_videos_bl_groups B ON A.analytics_video_id = B.analytics_video_id
+            LEFT JOIN bl_groups E ON B.group_id = E.id
+            LEFT JOIN bl_groups_bl_groups F ON E.id = F.child_group_id
+            LEFT JOIN bl_groups G ON F.parent_group_id = G.id
+            WHERE A.day >= '2015-08-15'
+            AND A.day <= '2015-08-21'
+            AND (
+                    (E.group_type_id = 1 AND G.group_type_id IS NULL)
+                    OR
+                    (E.group_type_id = 1 AND G.group_type_id = 3)
+                    OR
+                    (E.group_type_id = 2 AND G.group_type_id = 3)
+                )
+            GROUP BY showname
+            ORDER BY showname
+    '''
+
     db.execute(query, (start_date, end_date))
     data = db.fetchall()
     db.close()
