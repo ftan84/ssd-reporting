@@ -27,7 +27,6 @@ def lastEndDate(date=datetime.datetime.now()):
     date = datetime.datetime.combine(date, datetime.time(0))
     return date
 
-
 def lastStartDate():
     """Returns a datetime object of the Saturday before lastEndDate()."""
     enddate = lastEndDate()
