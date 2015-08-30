@@ -1,8 +1,8 @@
 import MySQLdb
 import ConfigParser
 import datetime
-import pymongo
 import logging
+import pymongo
 
 class SSDEtl:
     def __init__(self):

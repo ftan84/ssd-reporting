@@ -18,15 +18,10 @@ conf.read('./config.ini')
 class TestSsdEtl(unittest.TestCase):
     """Test suite for the ssdetl module.
     """
-    etl = SSDEtl()
-    logger.debug(etl.var)
-
-    @unittest.skip
     def test_dbconnect(self):
         ssdetl.ssdetl.connectMySQL(conf)
         ssdetl.ssdetl.connectMongo(conf)
 
-    @unittest.skip
     def test_fetchYT(self):
         db = ssdetl.ssdetl.connectMySQL(conf)
         data = ssdetl.ssdetl.fetchYT(
@@ -37,7 +32,6 @@ class TestSsdEtl(unittest.TestCase):
         for row in data:
             logger.debug(row)
 
-    @unittest.skip
     def test_get_start_end_date(self):
         enddate = ssdetl.ssdetl.lastEndDate(datetime.datetime(2015, 8, 20))
         print enddate
