@@ -4,15 +4,32 @@ import datetime
 import pymongo
 import logging
 
+class SSDEtl:
+    def __init__(self):
+        self._var = 'hello world'
+
+    @property
+    def var(self):
+        return self._var
+
 logger = logging.getLogger(__name__)
 
-def lastEndDate():
-    now = datetime.datetime.now()
-    return now - datetime.timedelta(days=now.weekday()) + \
+def lastEndDate(date=datetime.datetime.now()):
+    """Returns a datetime object of the most recent Friday.
+
+    Example:
+        If today is 2015-08-26, this function returns 2015-08-21
+    """
+    # now = datetime.datetime.now()
+    date = date - datetime.timedelta(days=date.weekday()) + \
             datetime.timedelta(days=4, weeks=-1)
+    date = date.date()
+    date = datetime.datetime.combine(date, datetime.time(0))
+    return date
 
 
 def lastStartDate():
+    """Returns a datetime object of the Saturday before lastEndDate()."""
     enddate = lastEndDate()
     return enddate - datetime.timedelta(days=6)
 
@@ -69,8 +86,8 @@ def fetchYT(db, start_date=datetime.datetime(2015, 1, 1),
             LEFT JOIN bl_groups E ON B.group_id = E.id
             LEFT JOIN bl_groups_bl_groups F ON E.id = F.child_group_id
             LEFT JOIN bl_groups G ON F.parent_group_id = G.id
-            WHERE A.day >= '2015-08-15'
-            AND A.day <= '2015-08-21'
+            WHERE A.day >= %s
+            AND A.day <= %s
             AND (
                     (E.group_type_id = 1 AND G.group_type_id IS NULL)
                     OR
@@ -90,6 +107,10 @@ def fetchYT(db, start_date=datetime.datetime(2015, 1, 1),
 
 
 def connectMongo(conf):
+    """Establish connection to MongoDB based on the configuration file.
+
+    Returns db connection.
+    """
     section = 'Mongodb'
     logger.info('Starting connectMongo')
     mdbhost = conf.get(section, 'host')
@@ -105,11 +126,9 @@ def connectMongo(conf):
 
 
 def loadYTToMongo(db, data):
-    """The function takes data taken from fetchYT and loads into Mongodb
+    """The function takes data taken from fetchYT and loads into Mongodb.
     """
-    # conf = ConfigParser.ConfigParser()
-    # conf.read('../config.ini')
-    # db = connectMongo(conf)
+    # Put all records into a dict first
     for row in data:
         date_entry = datetime.datetime.combine(
                 row[0],
@@ -118,6 +137,8 @@ def loadYTToMongo(db, data):
                 'show_id': row[1],
                 'show_name': row[2],
                 'youtube': {'views': row[3]}}
+
+
         db.days.update_one(
                 {'timestamp': date_entry},
                 {'$addToSet': {'shows': show_entry}},
