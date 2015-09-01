@@ -1,10 +1,10 @@
-import pytest
+# import pytest
 import unittest
-import ssdetl.ssdetl
+import utilities.etl
 import datetime
 import ConfigParser
 import logging
-from ssdetl.ssdetl import SSDEtl
+from utilities.etl import Processor
 from logging.config import fileConfig
 
 fileConfig('logging.ini')
@@ -12,34 +12,34 @@ logger = logging.getLogger(__name__)
 
 # Load the configuration file
 conf = ConfigParser.ConfigParser()
-conf.read('./config.ini')
+conf.read('config.ini')
 
 
-class TestSsdEtl(unittest.TestCase):
+class TestETL(unittest.TestCase):
     """Test suite for the ssdetl module.
     """
-    def test_dbconnect(self):
-        ssdetl.ssdetl.connectMySQL(conf)
-        ssdetl.ssdetl.connectMongo(conf)
+    def test_instatiation(self):
+        etl = utilities.etl.Processor(conf)
+        section = 'MySQL'
+        self.assertEquals(etl.conf.get(section, 'host'), '127.0.0.1')
+        self.assertEquals(etl.conf.get(section, 'port'), '3308')
+        self.assertEquals(etl.conf.get(section, 'user'), 'ftan')
+        section = 'Mongodb'
+        self.assertEquals(etl.conf.get(section, 'host'), '127.0.0.1')
+        self.assertEquals(etl.conf.get(section, 'port'), '27017')
+        self.assertEquals(etl.conf.get(section, 'user'), 'ssdreportingUser')
+        self.assertEquals(etl.conf.get(section, 'db'), 'ssdreporting')
 
-    def test_fetchYT(self):
-        db = ssdetl.ssdetl.connectMySQL(conf)
-        data = ssdetl.ssdetl.fetchYT(
-                db,
-                datetime.datetime(2015, 7, 18),
-                datetime.datetime(2015, 7, 19)
-                )
-        for row in data:
-            logger.debug(row)
 
     def test_get_start_end_date(self):
-        enddate = ssdetl.ssdetl.lastEndDate(datetime.datetime(2015, 8, 20))
-        print enddate
-        startdate = ssdetl.ssdetl.lastStartDate()
-        enddate = ssdetl.ssdetl.lastEndDate()
+        etl = utilities.etl.Processor(conf)
+        enddate = etl._lastEndDate(datetime.datetime(2015, 8, 20))
+        logger.debug(enddate)
+        startdate = etl._lastStartDate()
+        enddate = etl._lastEndDate()
         # assert enddate.weekday() == 4
-        print startdate
-        print enddate
+        logger.debug(startdate)
+        logger.debug(enddate)
         self.assertEquals(enddate.weekday(), 4)
         # assert enddate.weekday() == 8
         # assert startdate.weekday() == 5
@@ -47,17 +47,35 @@ class TestSsdEtl(unittest.TestCase):
         # assert startdate < enddate
         self.assertLess(startdate, enddate)
 
+
+    @unittest.skip
+    def test_dbconnect(self):
+        utilities.etl.connectMySQL(conf)
+        utilities.etl.connectMongo(conf)
+
+    @unittest.skip
+    def test_fetchYT(self):
+        db = utilities.etl.connectMySQL(conf)
+        data = utilities.etl.fetchYT(
+                db,
+                datetime.datetime(2015, 7, 18),
+                datetime.datetime(2015, 7, 19)
+                )
+        for row in data:
+            logger.debug(row)
+
+
     @unittest.skip
     def test_load_mongo(self):
         print 'test load mongo'
-        dbmysql = ssdetl.ssdetl.connectMySQL(conf)
-        data = ssdetl.ssdetl.fetchYT(
+        dbmysql = utilities.etl.connectMySQL(conf)
+        data = utilities.etl.fetchYT(
                 dbmysql,
                 datetime.datetime(2015, 7, 18),
                 datetime.datetime(2015, 7, 22)
                 )
-        dbmongo = ssdetl.ssdetl.connectMongo(conf)
-        ssdetl.ssdetl.loadYTToMongo(dbmongo, data)
+        dbmongo = utilities.etl.connectMongo(conf)
+        utilities.etl.loadYTToMongo(dbmongo, data)
         for row in dbmongo.days.find():
             # logger.debug('\n{}'.format(row))
             print row
