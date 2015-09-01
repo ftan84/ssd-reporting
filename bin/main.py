@@ -7,14 +7,14 @@ import pytz
 from logging.config import fileConfig
 
 # logging.basicConfig(level=logging.DEBUG)
-fileConfig('logging.ini')
+fileConfig('../logging.ini')
 logger = logging.getLogger(__name__)
 
 def main():
 
     # Set config file and logging
     conf = ConfigParser.ConfigParser()
-    conf.read('config.ini')
+    conf.read('../config.ini')
     try:
         conf._sections.popitem()
     except KeyError:
