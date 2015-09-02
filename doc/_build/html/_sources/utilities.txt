@@ -10,10 +10,10 @@ utilities.etl module
     :show-inheritance:
 
 
-Module contents
----------------
-
-.. automodule:: utilities
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. Module contents
+.. ---------------
+..
+.. .. automodule:: utilities
+..     :members:
+..     :undoc-members:
+..     :show-inheritance:
