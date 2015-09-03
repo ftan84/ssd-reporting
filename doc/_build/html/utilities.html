@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>utilities package &mdash; SSD Reporting 1.0 documentation</title>
+    <title>utilities Package API Reference &mdash; SSD Reporting 1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -48,8 +48,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="utilities-package">
-<h1>utilities package<a class="headerlink" href="#utilities-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="utilities-package-api-reference">
+<h1>utilities Package API Reference<a class="headerlink" href="#utilities-package-api-reference" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="module-utilities.etl">
 <span id="utilities-etl-module"></span><h2>utilities.etl module<a class="headerlink" href="#module-utilities.etl" title="Permalink to this headline">¶</a></h2>
 <p>The ETL is a process that collects data in raw form from our House of
@@ -67,17 +67,23 @@ For example, the YouTube platform stores data on views, likes, dislikes,
 etc.</p>
 <p>After data has been collected, it then loads said data to a MongoDB
 database.</p>
+<dl class="attribute">
+<dt id="utilities.etl.Processor.conf">
+<code class="descname">conf</code><a class="headerlink" href="#utilities.etl.Processor.conf" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute holds config information based on config.ini.</p>
+</dd></dl>
+
 <dl class="method">
-<dt id="utilities.etl.Processor.fetchYT">
-<code class="descname">fetchYT</code><span class="sig-paren">(</span><em>db</em>, <em>start_date=datetime.datetime(2015</em>, <em>1</em>, <em>1</em>, <em>0</em>, <em>0)</em>, <em>end_date=None</em><span class="sig-paren">)</span><a class="headerlink" href="#utilities.etl.Processor.fetchYT" title="Permalink to this definition">¶</a></dt>
+<dt id="utilities.etl.Processor.fetchYoutube">
+<code class="descname">fetchYoutube</code><span class="sig-paren">(</span><em>start_date=datetime.datetime(2015</em>, <em>1</em>, <em>1</em>, <em>0</em>, <em>0)</em>, <em>end_date=None</em><span class="sig-paren">)</span><a class="headerlink" href="#utilities.etl.Processor.fetchYoutube" title="Permalink to this definition">¶</a></dt>
 <dd><p>Collects YouTube data from the House of Wisdom 2 database and
 stores it in the current instance under the data dict with the key
 <cite>youtube.</cite></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="utilities.etl.Processor.loadYTToMongo">
-<code class="descname">loadYTToMongo</code><span class="sig-paren">(</span><em>db</em>, <em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#utilities.etl.Processor.loadYTToMongo" title="Permalink to this definition">¶</a></dt>
+<dt id="utilities.etl.Processor.loadYoutube">
+<code class="descname">loadYoutube</code><span class="sig-paren">(</span><em>db</em>, <em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#utilities.etl.Processor.loadYoutube" title="Permalink to this definition">¶</a></dt>
 <dd><p>The function takes data taken from fetchYT and loads into Mongodb.</p>
 </dd></dl>
 
@@ -94,7 +100,7 @@ stores it in the current instance under the data dict with the key
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">utilities package</a><ul>
+<li><a class="reference internal" href="#">utilities Package API Reference</a><ul>
 <li><a class="reference internal" href="#module-utilities.etl">utilities.etl module</a></li>
 </ul>
 </li>

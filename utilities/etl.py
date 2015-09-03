@@ -27,10 +27,10 @@ class Processor:
     def __init__(self, conf):
         self._conf = conf
 
-    # @property
-    # def conf(self):
-    #     """This attribute holds config information based on config.ini."""
-    #     return self._conf
+    @property
+    def conf(self):
+        """This attribute holds config information based on config.ini."""
+        return self._conf
 
 
     def _lastEndDate(self, date=datetime.datetime.now()):
@@ -52,16 +52,16 @@ class Processor:
         return enddate - datetime.timedelta(days=6)
 
 
-    def _connectMySQL(self, conf):
+    def _connectMySQL(self):
         """Establishes connection to MySQL based on the configuration file.
 
         Returns db connection.
         """
         section = 'MySQL'
-        dbhost = conf.get(section, 'host')
-        dbport = conf.getint(section, 'port')
-        dbuser = conf.get(section, 'user')
-        dbpw = conf.get(section, 'pw')
+        dbhost = self._conf.get(section, 'host')
+        dbport = self._conf.getint(section, 'port')
+        dbuser = self._conf.get(section, 'user')
+        dbpw = self._conf.get(section, 'pw')
 
         con = MySQLdb.connect(dbhost, port=dbport, user=dbuser,
                               passwd=dbpw, db='analytics')
@@ -91,13 +91,14 @@ class Processor:
     # def fetchYT(self, db, start_date=datetime.datetime(2015, 1, 1),
     #         end_date=datetime.datetime(2015, 1, 8)
     #         ):
-    def fetchYT(self, db, start_date=datetime.datetime(2015, 1, 1),
+    def fetchYoutube(self, start_date=datetime.datetime(2015, 1, 1),
             end_date=None
             ):
         """Collects YouTube data from the House of Wisdom 2 database and
         stores it in the current instance under the data dict with the key
         `youtube.`
         """
+        db = self._connectMySQL(self._conf)
 
         logger.debug('Starting fetchYT')
         # Original query
@@ -156,7 +157,7 @@ class Processor:
 
 
 
-    def loadYTToMongo(self, db, data):
+    def loadYoutube(self, db, data):
         """The function takes data taken from fetchYT and loads into Mongodb.
         """
         # Put all records into a dict first

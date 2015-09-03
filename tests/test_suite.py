@@ -18,6 +18,10 @@ conf.read('config.ini')
 class TestETL(unittest.TestCase):
     """Test suite for the ssdetl module.
     """
+    def setUp(self):
+        self.etl = utilities.etl.Processor(conf)
+
+
     def test_instatiation(self):
         etl = utilities.etl.Processor(conf)
         section = 'MySQL'
@@ -32,11 +36,11 @@ class TestETL(unittest.TestCase):
 
 
     def test_get_start_end_date(self):
-        etl = utilities.etl.Processor(conf)
-        enddate = etl._lastEndDate(datetime.datetime(2015, 8, 20))
+        # etl = utilities.etl.Processor(conf)
+        enddate = self.etl._lastEndDate(datetime.datetime(2015, 8, 20))
         logger.debug(enddate)
-        startdate = etl._lastStartDate()
-        enddate = etl._lastEndDate()
+        startdate = self.etl._lastStartDate()
+        enddate = self.etl._lastEndDate()
         # assert enddate.weekday() == 4
         logger.debug(startdate)
         logger.debug(enddate)
@@ -48,10 +52,10 @@ class TestETL(unittest.TestCase):
         self.assertLess(startdate, enddate)
 
 
-    @unittest.skip
     def test_dbconnect(self):
-        utilities.etl.connectMySQL(conf)
-        utilities.etl.connectMongo(conf)
+        logger.debug(self.etl.conf.get('MySQL', 'host'))
+        self.etl._connectMySQL()
+        # self.etl.connectMongo(conf)
 
     @unittest.skip
     def test_fetchYT(self):

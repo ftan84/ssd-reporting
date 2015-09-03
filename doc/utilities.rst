@@ -1,5 +1,5 @@
-utilities package
-=================
+utilities Package API Reference
+===============================
 
 utilities.etl module
 --------------------
